@@ -1,4 +1,4 @@
-# Trailhead Superbadge 'Apex Specialist'
+# Salesforce Trailhead Superbadge 'Apex Specialist'
 `Apex Specialist` is one of the superbadges of `Salesforce` `trailhead(A New Approach to Learning Salesforce)`.
 This repository is for solving all the problems and pass all the challenges in the way of earning this superbadge.
 

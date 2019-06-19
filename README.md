@@ -11,8 +11,8 @@ This repository is for solving all the problems and pass all the challenges in t
 6. Test scheduling logic to confirm action gets `queued`
 
 ### Concepts Tested in This Superbadge
-* Apex Triggers
-* Asynchronous Apex
-* Apex Integration
-* Apex Testing
+* `Apex Triggers`
+* `Asynchronous Apex`
+* `Apex Integration`
+* `Apex Testing`
 

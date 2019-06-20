@@ -6,43 +6,37 @@ public with sharing class WarehouseCalloutService {
     // REST endpoint and update equipment on hand.
     @future(callout=true)
     public static void runWarehouseEquipmentSync(){
-        try{
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint(WAREHOUSE_URL);
-            request.setMethod('GET');
-            HttpResponse response = http.send(request);
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(WAREHOUSE_URL);
+        request.setMethod('GET');
+        HttpResponse response = http.send(request);
+        
+        if (response.getStatusCode() == 200) {
+            List<Object> results = (List<Object>) JSON.deserializeUntyped(response.getBody());
+            List<Product2> equipmentList = new List<Product2>();
             
-            if (response.getStatusCode() == 200) {
-                List<Object> results = (List<Object>) JSON.deserializeUntyped(response.getBody());
-                List<Product2> equipmentList = new List<Product2>();
+            for (Object record: results) {
+                Map<String, Object> recordMap = (Map<String, Object>)record;
+                Product2 equipment = new Product2();
                 
-                for (Object record: results) {
-                    Map<String, Object> recordMap = (Map<String, Object>)record;
-                    Product2 equipment = new Product2();
-                    
-                    equipment.Name = (String)recordMap.get('name');
-                    equipment.Cost__c = (Decimal)recordMap.get('cost');
-                    equipment.ProductCode = (String)recordMap.get('_id');
-                    equipment.Current_Inventory__c = (Integer)recordMap.get('quantity');
-                    equipment.Maintenance_Cycle__c = (Integer)recordMap.get('maintenanceperiod');
-                    equipment.Replacement_Part__c = (Boolean)recordMap.get('replacement');
-                    equipment.Lifespan_Months__c = (Integer)recordMap.get('lifespan');
-                    equipment.Warehouse_SKU__c = (String)recordMap.get('sku');
-                    
-                    System.debug(equipment.Name);
-                    
-                    equipmentList.add(equipment);
-                }
+                equipment.Name = (String)recordMap.get('name');
+                equipment.Cost__c = (Decimal)recordMap.get('cost');
+                equipment.ProductCode = (String)recordMap.get('_id');
+                equipment.Current_Inventory__c = (Integer)recordMap.get('quantity');
+                equipment.Maintenance_Cycle__c = (Integer)recordMap.get('maintenanceperiod');
+                equipment.Replacement_Part__c = (Boolean)recordMap.get('replacement');
+                equipment.Lifespan_Months__c = (Integer)recordMap.get('lifespan');
+                equipment.Warehouse_SKU__c = (String)recordMap.get('sku');
                 
-                if(equipmentList.size() > 0){
-					upsert equipmentList;
-                }
+                equipmentList.add(equipment);
             }
             
-        }catch(Exception ex){
-            System.debug('ex: ' + ex);
+            if(equipmentList.size() > 0){
+                upsert equipmentList;
+            }
         }
+        
     }
     
     

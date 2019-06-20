@@ -4,9 +4,13 @@ public class WarehouseSyncScheduleTest {
     
     @isTest
     static void testExecute(){
+        Test.setMock(HttpCalloutMock.class, new WarehouseCalloutServiceMock());
+        
         Test.startTest();
         String jobId = System.schedule('WarehouseSyncScheduleTest', CRON_EXP, new WarehouseSyncSchedule());
         Test.stopTest();
+        
+        System.assertEquals(1, [SELECT count() FROM CronTrigger WHERE CronJobDetail.Name = 'WarehouseSyncScheduleTest']);
     }
 
 }
